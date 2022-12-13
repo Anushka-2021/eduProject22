@@ -15,6 +15,13 @@ heads = {
     'X-RapidAPI-Key':tok_n,
     'X-RapidApi-Host': host
 }
+langes = [{'id': 52, 'name': 'C++ (GCC 7.4.0)'}, {'id': 54, 'name': 'C++ (GCC 9.2.0)'}, {'id': 62, 'name': 'Java (OpenJDK 13.0.1)'}, {'id': 71, 'name': 'Python (3.8.1)'}]
+app.secret_key = '1806363f0fmshf3926631702e101p1eda9ajsn5e10975d9be7'
+
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    return render_template("login.html")
+
 
 if __name__ == '__main__':
     cursor.execute("""CREATE TABLE IF NOT EXISTS user_table_1

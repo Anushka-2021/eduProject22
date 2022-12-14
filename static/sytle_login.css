@@ -1,0 +1,104 @@
+html {
+  background-color: #c7925f;
+  background-blend-mode:overlay;
+  align-items:center;
+  justify-content:center;
+  background-repeat:no-repeat;
+  background-size:cover;
+  font-size:17px;
+  display:flex;
+}
+
+body {
+  background-color:transparent;
+}
+
+.registration-cssave{
+  padding:50px 0;
+}
+
+.registration-cssave form {
+  max-width:800px;
+  padding:50px 70px;
+  border-radius:10px;
+  box-shadow:4px 4px 15px rgba(0, 0, 0, 0.2);
+  background-color:#fff;
+}
+
+.registration-cssave form h3 {
+  font-weight:bold;
+  margin-bottom:30px;
+}
+
+.registration-cssave .item {
+  border-radius:10px;
+  margin-bottom:25px;
+  padding:10px 20px;
+}
+
+.registration-cssave .create-account {
+  border-radius:30px;
+  padding:10px 20px;
+  font-size:18px;
+  font-weight:bold;
+  background-color: #153156;
+  border:none;
+  color:white;
+  margin-top:20px;
+}
+div.basic {
+  max-width:1200px;
+  padding:5px 20px;
+  border-radius:10px;
+  box-shadow:4px 4px 15px rgba(0, 0, 0, 0.2);
+  background-color:#fff;
+}
+div.main_field{
+  max-width:1200px;
+  padding:5px 20px;
+  margin:10px 0px;
+  border-radius:10px;
+  box-shadow:4px 4px 15px rgba(0, 0, 0, 0.2);
+  background-color:#fff;
+}
+textarea.code{
+  border-radius:10px;
+  margin-bottom:10px;
+  padding:10px 20px;
+
+}
+input.knopka{
+  border-radius:30px;
+  padding:10px 10px;
+  font-size:17px;
+  background-color: #153156;
+  border:none;
+  color:white;
+  margin-bottom:10px;
+}
+header.base{
+  padding:5px 20px;
+    display: flex;
+  justify-content: center;
+  background-color:#C7925FFF;
+  font-weight:bold;
+  border-radius:10px;
+  box-shadow:4px 4px 15px rgba(0, 0, 0, 0.2);
+}
+div.knopka1{
+  border-radius:30px;
+  padding:10px 10px;
+  font-size:17px;
+  background-color: #ffffff;
+  border:none;
+  margin-bottom:10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+@media (max-width: 576px) {
+  .registration-cssave form {
+    padding:50px 20px;
+  }
+}

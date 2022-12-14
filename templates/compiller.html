@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="basic">
+    <h3>Compiler</h3>
+    <p>Try your code!</p>
+</div>
+<div calss="main_field">
+    <p>Choose language:</p>
+    <form action="/" id="send_code" method="post">
+        {% for a in langs %}<p>
+        {{ a['name'] }}
+        <input type="radio" name="language" value={{ a['id'] }}>
+        {% endfor %}</p>
+        <textarea class="code" id="Code" name="code_area" rows="30" cols="50" style="resize:none" required autocomplete="on" placeholder="//Enter your code here.">{{Code}}</textarea>
+        <textarea class="code" id="rets" name="rets" rows="30" cols="50" style="resize:none" placeholder="//Your output here.">{{ rets }}</textarea><br>
+        <label for="input">Enter your input:</label><br>
+        <textarea class="code" id="input" name="cin" rows="5" cols="50" style="resize:none" placeholder="//Your Input here.">{{input}}</textarea><br>
+        <!--<input type="checkbox" name="check" id="GFG"
+               value="1" {{check}}>Enable input<br>-->
+        <input class="knopka" type="submit" class="butt" id="butt" value="Compile code">
+    </form>
+</div>
+{{ data }}
+{{ res }}
+{% endblock %}

@@ -100,11 +100,11 @@ def send_task():
                     testCin = base64.b64encode(testCin.encode("UTF-8")).decode("UTF-8")
                     testCout = base64.b64encode(testCout.encode("UTF-8")).decode("UTF-8")
                     f = {"language_id": myCodeLanguage,
-                     "source_code": Code,
-                     "stdin": testCin,
-                     "expected_output": testCout}
+                         "source_code": Code,
+                         "stdin": testCin,
+                         "expected_output": testCout}
                     subs.append(f)
-        #print(subs)
+                #print(subs)
 
                 #nulling
                 testCin = ''
@@ -120,33 +120,44 @@ def send_task():
 
         print(subs)
         spending_pack = {"submissions": subs}
-        #print(spending_pack)
         respos = requests.request("POST", multi_sent_adress, params = {"base64_encoded": "true"}, json = spending_pack, headers = heads).json()
-        #if respos == "Response [201]":
         tokens = ''
         #respos = [{'token': '0e612122-2e01-494c-aa7e-0b5072dbd764'}, {'token': '8d5fb1e1-f482-4228-8389-07e575150ffa'}, {'token': 'ff126b81-c013-40f8-9dde-79db93a80945'}]
         print(respos)
-        #resp = "Response [429]"
-        #if respos == "Response [201]":
-         #   print("ura")
-       # print(respos.json())
+
+        # datetime = day, time
+        now = datetime.datetime.now()
+        time = now.strftime("%H:%M:%S")
+        day = now.strftime("%d/%m/%y")
+
         if respos[0]['token']:
             for i in respos:
                 tokens += i['token'] + ','
-                #print(tokens)
-                #print(i['token'])
+
+                # sol_id = i
+            i = 0
+            cursor.execute("SELECT * FROM solutions2")
+            f = cursor.fetchone()
+            while f:
+                i += 1
+                f = cursor.fetchone()
+            solution_id = i + 1
+
+            cursor.execute("INSERT OR REPLACE INTO solutions2(sol_id, task_id, lang, code, percents, time_of_sol, day_of_sol) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                           (solution_id, 1, myCodeLanguage, Code, 0, time, day))
+            conn.commit()
+
             #zapros resultatov resheniya
             answer = requests.request("GET", multi_sent_adress, headers = heads, params = {"base64_encoded": "true", "tokens": tokens, "fields": "*"}).json()
             for i in answer['submissions']:
                 print(i['status'])
-                if i['status']['id'] != 3:
+                if i['status']['id'] == 1 or i['status']['id'] == 2:
+                    for i in range(100):
+                        i += 1
+                elif i['status']['id'] != 3:
                     return render_template("task1.html", rets = i['status']['description'], langs = langes)
             return render_template("task1.html", rets = "Success!", langs = langes)
 
-    #elif respos == "Response [200]":
-         #   for i in respos.json():
-          #      print(i)
-        #else:
         return render_template("task1.html", data="Mistakeeee", langs = langes)
 
 
@@ -172,19 +183,6 @@ def send_task():
         output = base64.b64decode(data.encode("UTF-8")).decode("UTF-8")
         #as / finished
 
-        #datetime = day, time
-        now = datetime.datetime.now()
-        time = now.strftime("%H:%M:%S")
-        day = now.strftime("%d/%m/%y")
-
-        #sol_id = i
-        i = 0
-        cursor.execute("SELECT * FROM solutions2")
-        f = cursor.fetchone()
-        while f:
-            i += 1
-            f = cursor.fetchone()
-        solution_id = i+1
 
         #testing
         cursor.execute("SELECT tests FROM tasks WHERE task_id=?", ('1', ))
@@ -276,5 +274,3 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
-
-

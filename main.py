@@ -71,8 +71,7 @@ def send_task():
         Code = base64.b64encode(request.form.get('code_area').encode("UTF-8")).decode("UTF-8")
         myCodeLanguage = request.form.get('language')
         if myCodeLanguage is None:
-            return render_template("task1.html", data="Please choose language", langs = langes)
-        #myCin = base64.b64encode(request.form.get('cin').encode("UTF-8")).decode("UTF-8")
+            return render_template("task1.html", data="Please choose language", langs = langes, task=task1_text)
 
         #testing
         cursor.execute("SELECT tests FROM tasks WHERE task_id=?", ('1', ))
@@ -110,13 +109,12 @@ def send_task():
                     testCout += i + ' '
                 else:
                     testCin += i + ' '
+        #end of testing
 
-        print(subs)
         spending_pack = {"submissions": subs}
         respos = requests.request("POST", multi_sent_adress, params = {"base64_encoded": "true"}, json = spending_pack, headers = heads).json()
         tokens = ''
         #respos = [{'token': '0e612122-2e01-494c-aa7e-0b5072dbd764'}, {'token': '8d5fb1e1-f482-4228-8389-07e575150ffa'}, {'token': 'ff126b81-c013-40f8-9dde-79db93a80945'}]
-        print(respos)
 
         # datetime = day, time
         now = datetime.datetime.now()
@@ -143,87 +141,35 @@ def send_task():
             #zapros resultatov resheniya
             answer = requests.request("GET", multi_sent_adress, headers = heads, params = {"base64_encoded": "true", "tokens": tokens, "fields": "*"}).json()
             for i in answer['submissions']:
-                print(i['status'])
-                if i['status']['id'] == 1 or i['status']['id'] == 2:
-                    for i in range(100):
+                while (i['status']['id'] == 1 or i['status']['id'] == 2):
+                    for i in range(100000000):
                         i += 1
-                elif i['status']['id'] != 3:
-                    return render_template("task1.html", rets = i['status']['description'], langs = langes)
-            return render_template("task1.html", rets = "Success!", langs = langes)
+                    answer = requests.request("GET", multi_sent_adress, headers = heads, params = {"base64_encoded": "true", "tokens": tokens, "fields": "*"}).json()
+                    i = answer['submissions'][0]
 
-        return render_template("task1.html", data="Mistakeeee", langs = langes)
+                if i['status']['id'] != 3:
+                    return render_template("task1.html", rets = i['status']['description'], langs = langes, task = task1_text)
+            return render_template("task1.html", rets = "Success!", langs = langes, task = task1_text)
 
 
-        return render_template("task1.html", data="Please choose language", langs = langes)
-        resp = requests.request("POST", sent_adress, headers = heads, json = dats, params = {"base64_encoded": "true"})
-        print(resp.json())
-        print(heads)
-        if resp == "Response [429]":
-            print("OOps")
-        elif resp == "Response [200]":# or "Response [201]":
-            resp = resp.json()
-            decision_tok_n = resp['token']
-            answer = requests.request("GET", sent_adress + decision_tok_n, headers = heads, params = {"base64_encoded": "true"}).json()
-        else:
-            return render_template("task1.html", data = "Mistake", langs = langes)
+#        return render_template("task1.html", data="Please choose language", langs = langes, task = task1_text)
+ #       resp = requests.request("POST", sent_adress, headers = heads, json = dats, params = {"base64_encoded": "true"})
+  #      print(resp.json())
+   #     print(heads)
+    #    if resp == "Response [429]":
+     #       print("OOps")
+      #  elif resp == "Response [200]":# or "Response [201]":
+       #     resp = resp.json()
+        #    decision_tok_n = resp['token']
+         #   answer = requests.request("GET", sent_adress + decision_tok_n, headers = heads, params = {"base64_encoded": "true"}).json()
+        #else:
+         #   return render_template("task1.html", data = "Mistake", langs = langes, task = task1_text)
 
-        data = answer['stdout']
-        st_tus = answer['status']['description']
-
-        #decoding output
-        output = base64.b64decode(data.encode("UTF-8")).decode("UTF-8")
+        #data = answer['stdout']
+      #  st_tus = answer['status']['description']
         #as / finished
 
-
-        #testing
-        cursor.execute("SELECT tests FROM tasks WHERE task_id=?", ('1', ))
-        q = cursor.fetchall()[0][0]
-        print(q)
-
-        testCin = ''
-        testCout = ''
-        w = q.split()
-        print(w)
-        subs = {}
-        st = ''
-        marker = 1
-        for i in q:
-            if i != ';':
-                if i == '=':
-                    print(i, 'i==')
-                    marker = 0
-                elif i != '=':
-                    print(i, ' i!=')
-                    if marker == 0:
-                        testCout += i + ' '
-                        marker = 1
-                        print(testCout + '?')
-                        print(marker)
-                    elif marker == 1:
-                        testCin += i + ' '
-                        marker = 0
-            else:
-                print(testCin)
-                print(testCout)
-                testCin = ''
-                testCout = ''
-
-        #respos = requests.request("POST", sent_adress, headers = heads, json = dats, params = {"base64_encoded": "true"})
-
-        dats = {
-            "language_id": myCodeLanguage,
-            "source_code": Code,
-            "stdin": testCin,
-            "expected_output": testCout
-        }
-        #end of testing
-
-        #cursor.execute("SELECT OR REPLACE INTO solutions2(sol_id, task_id, lang, code, input, status, percents, time_of_sol, day_of_sol)",
-        #               (solution_id, 1, myCodeLanguage, Code, myCin, st_tus, 0, time, day))
-        #conn.commit()
-
-
-        return render_template('task1.html', rets = output, res = st_tus, langs = langes)
+        return render_template('task1.html', langs = langes, data = "Mistake")
 
     return render_template("task1.html", langs = langes, task = task1_text)
 
@@ -246,7 +192,7 @@ if __name__ == '__main__':
     #adding task1 handly
     #tests format: json - [{"left": a1, "right": b1, "result": c1}, {"left": a2, "right": b2, "result": c2},]
     #tests format current: json - [{"input1": string, "output1": str}, {"input2": str, "output2": str}]
-    task1_text = "Задача №1: Саша решил посчитать сколько у него яблок в двух рауках. Помогите ему сделать это, написав программу на одном из предложенных языков. На вход подаётся два числа: число яблок в правой и левой руках соответственно. Входные данные: два целых числа Выходные данные: одно целое число - количество яблок. Примечание: используйте ввод и вывод с клавиатуры"
+    task1_text = "Задача №1: Саша решил посчитать сколько у него яблок в двух руках. Помогите ему сделать это, написав программу на одном из предложенных языков. На вход подаётся два числа: число яблок в правой и левой руках соответственно. Входные данные: два целых числа Выходные данные: одно целое число - количество яблок. Примечание: используйте ввод и вывод с клавиатуры"
     #inp = [{"left":1, "right":1, "result":2}, {"left":3, "right":1, "result":4}, {"left":4, "right":-3, "result":1}]
     inp = [{"input": '1 1', "output": '2'}, {"input": '3 1', "output": '4'}, {"input": '4 -3', "output": '1'}]
     str = ''

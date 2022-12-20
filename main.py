@@ -28,10 +28,6 @@ app.secret_key = '1806363f0fmshf3926631702e101p1eda9ajsn5e10975d9be7'
 def login():
     return render_template("login.html")
 
-#@app.route('/', methods = ['GET', 'POST'])
-#def ap():
-#    return render_template("task1.html")
-
 @app.route('/', methods = ['GET', 'POST'])
 def task():
     if request.method == 'POST':
@@ -58,7 +54,6 @@ def task():
 
         data = answer['stdout']
 
-
         #decoding output
         if data == None:
             return render_template('compiller.html', rets = data, res = answer['status']['description'], langs = langes)
@@ -77,7 +72,6 @@ def send_task():
         myCodeLanguage = request.form.get('language')
         if myCodeLanguage is None:
             return render_template("task1.html", data="Please choose language", langs = langes)
-
         #myCin = base64.b64encode(request.form.get('cin').encode("UTF-8")).decode("UTF-8")
 
         #testing
@@ -104,7 +98,6 @@ def send_task():
                          "stdin": testCin,
                          "expected_output": testCout}
                     subs.append(f)
-                #print(subs)
 
                 #nulling
                 testCin = ''
@@ -163,12 +156,10 @@ def send_task():
 
         return render_template("task1.html", data="Please choose language", langs = langes)
         resp = requests.request("POST", sent_adress, headers = heads, json = dats, params = {"base64_encoded": "true"})
-        #response = requests.request("POST", sent_adress, headers = heads, json = dats, params = {"base64_encoded": "true"})
         print(resp.json())
         print(heads)
         if resp == "Response [429]":
             print("OOps")
-            #return render_template("task1.html", data = "Mistake", langs = langes)
         elif resp == "Response [200]":# or "Response [201]":
             resp = resp.json()
             decision_tok_n = resp['token']
@@ -234,7 +225,7 @@ def send_task():
 
         return render_template('task1.html', rets = output, res = st_tus, langs = langes)
 
-    return render_template("task1.html", langs = langes)
+    return render_template("task1.html", langs = langes, task = task1_text)
 
 if __name__ == '__main__':
     cursor.execute("""CREATE TABLE IF NOT EXISTS user_table_1

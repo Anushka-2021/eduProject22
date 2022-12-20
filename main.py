@@ -151,22 +151,6 @@ def send_task():
                     return render_template("task1.html", rets = i['status']['description'], langs = langes, task = task1_text)
             return render_template("task1.html", rets = "Success!", langs = langes, task = task1_text)
 
-
-#        return render_template("task1.html", data="Please choose language", langs = langes, task = task1_text)
- #       resp = requests.request("POST", sent_adress, headers = heads, json = dats, params = {"base64_encoded": "true"})
-  #      print(resp.json())
-   #     print(heads)
-    #    if resp == "Response [429]":
-     #       print("OOps")
-      #  elif resp == "Response [200]":# or "Response [201]":
-       #     resp = resp.json()
-        #    decision_tok_n = resp['token']
-         #   answer = requests.request("GET", sent_adress + decision_tok_n, headers = heads, params = {"base64_encoded": "true"}).json()
-        #else:
-         #   return render_template("task1.html", data = "Mistake", langs = langes, task = task1_text)
-
-        #data = answer['stdout']
-      #  st_tus = answer['status']['description']
         #as / finished
 
         return render_template('task1.html', langs = langes, data = "Mistake")
